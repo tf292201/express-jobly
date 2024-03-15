@@ -85,10 +85,133 @@ describe("findAll", function () {
       },
     ]);
   });
+
+  test("works with maxEmployees filter", async function () {
+    let companies = await Company.findAll({ maxEmployees: 2 });
+    expect(companies).toEqual([
+      {
+        handle: "c1",
+        name: "C1",
+        description: "Desc1",
+        numEmployees: 1,
+        logoUrl: "http://c1.img",
+      },
+      {
+        handle: "c2",
+        name: "C2",
+        description: "Desc2",
+        numEmployees: 2,
+        logoUrl: "http://c2.img",
+      },
+    ]);
+  });
+
+  test("works with nameLike, minEmployees, and maxEmployees filters", async function () {
+    let companies = await Company.findAll({ nameLike: "C", minEmployees: 2, maxEmployees: 3 });
+    expect(companies).toEqual([
+      {
+        handle: "c2",
+        name: "C2",
+        description: "Desc2",
+        numEmployees: 2,
+        logoUrl: "http://c2.img",
+      },
+      {
+        handle: "c3",
+        name: "C3",
+        description: "Desc3",
+        numEmployees: 3,
+        logoUrl: "http://c3.img",
+      },
+    ]);
+  });
+
+  test("works with nameLike filter", async function () {
+    let companies = await Company.findAll({ nameLike: "2" });
+    expect(companies).toEqual([
+      {
+        handle: "c2",
+        name: "C2",
+        description: "Desc2",
+        numEmployees: 2,
+        logoUrl: "http://c2.img",
+      },
+    ]);
+  });
+
+  test("works with minEmployees filter", async function () {
+    let companies = await Company.findAll({ minEmployees: 2 });
+    expect(companies).toEqual([
+      {
+        handle: "c2",
+        name: "C2",
+        description: "Desc2",
+        numEmployees: 2,
+        logoUrl: "http://c2.img",
+      },
+      {
+        handle: "c3",
+        name: "C3",
+        description: "Desc3",
+        numEmployees: 3,
+        logoUrl: "http://c3.img",
+      },
+    ]);
+  });
+
+  test("works with minEmployees and maxEmployees filters", async function () {
+    let companies = await Company.findAll({ minEmployees: 2, maxEmployees: 2 });
+    expect(companies).toEqual([
+      {
+        handle: "c2",
+        name: "C2",
+        description: "Desc2",
+        numEmployees: 2,
+        logoUrl: "http://c2.img",
+      },
+    ]);
+  });
+  test("works with minEmployees and nameLike filters", async function () {
+    let companies = await Company.findAll({ minEmployees: 2, nameLike: "C" });
+    expect(companies).toEqual([
+      {
+        handle: "c2",
+        name: "C2",
+        description: "Desc2",
+        numEmployees: 2,
+        logoUrl: "http://c2.img",
+      },
+      {
+        handle: "c3",
+        name: "C3",
+        description: "Desc3",
+        numEmployees: 3,
+        logoUrl: "http://c3.img",
+      },
+    ]);
+  });
+  test("works with maxEmployees and nameLike filters", async function () {
+    let companies = await Company.findAll({ maxEmployees: 2, nameLike: "C" });
+    expect(companies).toEqual([
+      {
+        handle: "c1",
+        name: "C1",
+        description: "Desc1",
+        numEmployees: 1,
+        logoUrl: "http://c1.img",
+      },
+      {
+        handle: "c2",
+        name: "C2",
+        description: "Desc2",
+        numEmployees: 2,
+        logoUrl: "http://c2.img",
+      },
+    ]);
+  });
 });
 
 /************************************** get */
-
 describe("get", function () {
   test("works", async function () {
     let company = await Company.get("c1");
@@ -98,8 +221,36 @@ describe("get", function () {
       description: "Desc1",
       numEmployees: 1,
       logoUrl: "http://c1.img",
+      jobs: [
+        {
+          id: expect.any(Number),
+          title: "Job1",
+          salary: 100,
+          equity: "0.1"
+        },
+        {
+          id: expect.any(Number),
+          title: "Job2",
+          salary: 200,
+          equity: "0.2"
+        },
+        {
+          id: expect.any(Number),
+          title: "Job3",
+          salary: 300,
+          equity: "0"
+        },
+        {
+          id: expect.any(Number),
+          title: "Job4",
+          salary: null,
+          equity: null
+        }
+      ]
     });
   });
+});
+
 
   test("not found if no such company", async function () {
     try {
@@ -109,7 +260,6 @@ describe("get", function () {
       expect(err instanceof NotFoundError).toBeTruthy();
     }
   });
-});
 
 /************************************** update */
 

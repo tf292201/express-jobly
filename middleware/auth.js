@@ -42,8 +42,36 @@ function ensureLoggedIn(req, res, next) {
   }
 }
 
+ 
+//check if user is admin
+
+function ensureAdmin(req, res, next) {
+  try {
+    if (!res.locals.user || !res.locals.user.isAdmin) {
+      throw new UnauthorizedError();
+    }
+    return next();
+  } catch (err) {
+    return next(err);
+  }
+}
+
+//check for correct user or admin status
+
+function isAdminOrCorrectUser(req, res, next) {
+  try {
+    if (!res.locals.user || res.locals.user.username !== req.params.username && !res.locals.user.isAdmin) {
+      throw new UnauthorizedError();
+    }
+    return next();
+  } catch (err) {
+    return next(err);
+  }
+}
 
 module.exports = {
   authenticateJWT,
   ensureLoggedIn,
+  ensureAdmin,
+  isAdminOrCorrectUser
 };

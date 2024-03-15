@@ -8,6 +8,9 @@
     },
     "password": {
       "type": "string"
+    },
+    "isAdmin": {
+      "type": "boolean"
     }
   },
   "additionalProperties": false,
