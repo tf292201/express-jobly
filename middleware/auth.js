@@ -42,8 +42,9 @@ function ensureLoggedIn(req, res, next) {
   }
 }
 
- 
-//check if user is admin
+ /////////////////////////////////////////
+// check if user is admin
+// allows access to route if user is admin
 
 function ensureAdmin(req, res, next) {
   try {
@@ -56,11 +57,14 @@ function ensureAdmin(req, res, next) {
   }
 }
 
-//check for correct user or admin status
+///////////////////////////////////////////
+// check for correct user or admin status
+// allows access to route if user is correct user or admin
 
 function isAdminOrCorrectUser(req, res, next) {
   try {
-    if (!res.locals.user || res.locals.user.username !== req.params.username && !res.locals.user.isAdmin) {
+    const user = res.locals.user;
+    if (!(user && (user.isAdmin || user.username === req.params.username))) {
       throw new UnauthorizedError();
     }
     return next();

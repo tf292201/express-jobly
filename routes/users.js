@@ -122,5 +122,21 @@ router.delete("/:username", isAdminOrCorrectUser, async function (req, res, next
   }
 });
 
+// Apply for a job
+// POST /users/[username]/jobs/[id]
+// Authorization required: login or admin
+// Returns { applied: jobId }
+
+router.post("/:username/jobs/:id", isAdminOrCorrectUser async function (req, res, next) {
+  try {
+    const username = req.params.username;
+    const jobId = req.params.id;
+    await User.apply(username, jobId);
+    return res.json({ applied: jobId });
+  } catch (err) {
+    return next(err);
+  }
+}
+);
 
 module.exports = router;
